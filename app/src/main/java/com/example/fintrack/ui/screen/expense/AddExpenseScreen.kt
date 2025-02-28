@@ -125,6 +125,8 @@ fun InputForm(
     var showDialogCategories = remember { mutableStateOf(false) }
     var showDialogDate = remember { mutableStateOf(false) }
 
+    val isButtonEnabled = viewModel.expenseState.amount > 0
+
     Column {
         Text(text = "Enter Amount", fontSize = 18.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
@@ -141,35 +143,19 @@ fun InputForm(
             ),
             value = viewModel.expenseState.amount.toString(),
             onValueChange = {
-                viewModel.onStateChange(amount = if(it.isBlank())0 else it.toInt())
+                val newValue = it.toIntOrNull() ?: 0
+                viewModel.onStateChange(amount = newValue)
             },
             leadingIcon = {
                 Text(text = currencySymbol)
             },
             placeholder = { Text(text = "10.000", color = Color.Gray) },
             singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal)
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
+
         Spacer(Modifier.height(16.dp))
-        Text(text = "Description", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-        Spacer(Modifier.height(8.dp))
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            shape = RoundedCornerShape(20),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = colorResource(id = R.color.tertiary),
-                focusedContainerColor = colorResource(id = R.color.secondary),
-                unfocusedContainerColor = colorResource(id = R.color.secondary),
-                unfocusedIndicatorColor = colorResource(id = R.color.secondary)
-            ),
-            value = viewModel.expenseState.description,
-            onValueChange = { viewModel.onStateChange(desc = it) },
-            placeholder = { Text(text = "Burger King And Coca Cola", color = Color.Gray) },
-            singleLine = true
-        )
-        Spacer(Modifier.height(16.dp))
+
         Text(text = "Category", fontSize = 18.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(8.dp))
         Button(
@@ -248,14 +234,18 @@ fun InputForm(
             }
         }
         Spacer(Modifier.height(24.dp))
+
         Button(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             shape = RoundedCornerShape(20),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.background)
+                containerColor = colorResource(id = R.color.background),
+                disabledContainerColor = Color.Gray, // Change color when disabled
+                disabledContentColor = Color.DarkGray
             ),
+            enabled = isButtonEnabled, // Button only clickable if amount > 0
             onClick = {
                 if (isUpdate) {
                     viewModel.updateExpense(
