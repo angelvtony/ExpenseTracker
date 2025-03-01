@@ -118,8 +118,6 @@ fun SummaryScreen(innerPadding:PaddingValues = PaddingValues(20.dp),viewModel: M
                 )
             }
         }else{
-            ExpenseChart(expenseList)
-            SummaryList(expenseList)
             Button(
                 onClick = {
                     when {
@@ -131,10 +129,21 @@ fun SummaryScreen(innerPadding:PaddingValues = PaddingValues(20.dp),viewModel: M
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(20),
+                colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black))
             ) {
-                Text(text = "Download Expense Report")
+                Text(
+                    text = "Download Expense Report",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
             }
+            ExpenseChart(expenseList)
+            SummaryList(expenseList)
+
         }
 
     }
