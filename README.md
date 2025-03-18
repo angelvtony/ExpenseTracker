@@ -58,10 +58,6 @@ If granted, it generates and saves the expense report.
 
 Installation
 
-Clone the repository:
-
-git clone https://github.com/your-repo/expense-tracker.git
-
 Open the project in Android Studio.
 
 Run the project on an emulator or a physical device.
